@@ -1,16 +1,16 @@
-$(document).ready(function() {
-	// This is for YouTube
+$(function() {
+	// Asynchronous
+	chrome.tabs.query({
+		active: true,
+		lastFocusedWindow: true
+	}, function(tabs) {
+		// Since there can only be one active tab in one active window, 
+		var tabURL = tabs[0].url;
+		$('#url').text('Current URL: ' + tabURL);
+	});
+
 	$("#saveTime").click(function() {
-		// Asynchronous
-		chrome.tabs.query({
-			active: true,
-			lastFocusedWindow: true
-		}, function(tabs) {
-			// Since there can only be one active tab in one active window, 
-			var tabURL = tabs[0].url;
-			$('#url').text('Current URL: ' + tabURL);
-			getCurrentTime();
-		});
+		getCurrentTime();
 	});
 
 
@@ -25,6 +25,7 @@ $(document).ready(function() {
 				console.log(chrome.runtime.lastError.message);
 			}
 			$('#currentTime').text("Current time is: " + results);
+			// Need to add "append" to this, prompt the user for tag description.
 		});
-	}
+	};
 });
