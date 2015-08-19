@@ -10,12 +10,11 @@ $(function() {
 	});
 
 	$("#saveTime").click(function() {
-		getCurrentTime();
+		addTagToDom();
 	});
 
-
 	// A function that injects JS into the active tab to get video's current time back
-	var getCurrentTime = function() {
+	var addTagToDom = function() {
 		chrome.tabs.executeScript(null, {
 			code: 'var v = document.getElementsByTagName("video")[0]; v.currentTime'
 				// The last call in 'code' gets returned into 'results'
@@ -24,8 +23,28 @@ $(function() {
 			if (chrome.runtime.lastError) {
 				console.log(chrome.runtime.lastError.message);
 			}
-			$('#currentTime').text("Current time is: " + results);
-			// Need to add "append" to this, prompt the user for tag description.
+
+			var description = $('#tagDesc').val();
+			if (description !== "") {
+				$('#tagDesc').val("");
+
+				// Binds a event click to the list item.
+				var tagLink = $("<li>").text(results + " : " + description).attr("id", results);
+				tagLink.click(function () {
+					var time = $(this).attr('id');
+					changeToTime(time);
+				});
+				$('#tags').append(tagLink);
+			} else {
+				$('#tagDesc').attr("placeholder", "Please enter a tag..");
+			}
 		});
+	};
+
+	// Changes the HTML5 video's time to the one passed in.
+	var changeToTime = function(time) {
+		chrome.tabs.executeScript(null, {
+			code: 'var v = document.getElementsByTagName("video")[0]; v.currentTime=' + time
+		}, function(results) {});
 	};
 });
