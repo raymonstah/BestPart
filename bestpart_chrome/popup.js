@@ -1,5 +1,4 @@
 $(function() {
-	// Asynchronous
 	var tabURL = '';
 	chrome.tabs.query({
 		active: true,
@@ -21,12 +20,12 @@ $(function() {
 				// The last call in 'code' gets returned into 'results'
 		}, function(results) {
 			var time = results[0];
+			var timeString = secondsToHms(time);
 			var description = $('#tagDesc').val();
 			if (description !== "") {
 				$('#tagDesc').val("");
-
 				// Binds a event click to the list item.
-				var tagLink = $("<li>").text(time + " : " + description).attr("id", time);
+				var tagLink = $("<li>").text(timeString + " : " + description).attr("id", time);
 				tagLink.click(function() {
 					var time = $(this).attr('id');
 					changeToTime(time);
@@ -34,10 +33,14 @@ $(function() {
 				$('#tags').append(tagLink);
 
 				// Send this to the server.
-				tagJSON = {url: url, time : time, description : description};
+				tagJSON = {
+					url: url,
+					time: time,
+					description: description
+				};
 				console.log(tagJSON);
 				$.post("http://localhost:3000/bestpart", tagJSON);
-				
+
 			} else {
 				$('#tagDesc').attr("placeholder", "Please enter a tag..");
 			}
@@ -50,4 +53,12 @@ $(function() {
 			code: 'var v = document.getElementsByTagName("video")[0]; v.currentTime=' + time
 		}, function(results) {});
 	};
+
+	var secondsToHms = function(d) {
+		d = Number(d);
+		var h = Math.floor(d / 3600);
+		var m = Math.floor(d % 3600 / 60);
+		var s = Math.floor(d % 3600 % 60);
+		return ((h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s);
+	}
 });

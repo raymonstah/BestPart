@@ -15,24 +15,24 @@ app.use(bodyParser.urlencoded({
 	extended: false
 }));
 
-app.post('/bestpart', function(req, res) {
+// This is to add or update a new tag
+app.post('/bestpart/tag', function(req, res) {
 	var tagJSON = req.body;
 	var tag = {
 		tag_created: new Date(),
 		tag_time: tagJSON.time,
 		tag_description: tagJSON.description,
-		tag_upvotes: 0,
-		tag_downvotes: 0
+		tag_score: 0
 	};
 	var searchFor = {
 		url: tagJSON.url
 	};
 	console.log("Received a POST");
 	db.findOne(searchFor, function(err, docs) {
-		if (docs == null) {
+		if (docs === null) {
 			video = {
-				url : tagJSON.url,
-				tags : [tag],
+				url: tagJSON.url,
+				tags: [tag],
 			};
 			db.insert(video);
 			console.log("Added to db.");
@@ -42,10 +42,24 @@ app.post('/bestpart', function(req, res) {
 				$push: {
 					tags: tag
 				}
-			}, {}, function(){});
+			}, {}, function() {});
 			console.log("Updated DB");
 		}
 	});
+});
+
+// This is to update the votes a tag has.
+app.post('/bestpart/votes', function(req, res) {
+	var tagJSON = req.body;
+	var searchFor = {
+		url: tagJSON.url
+	};
+	var newScore = tagJSON.vote;
+	db.update(searchFor, {
+		$inc: {
+			score: newScore
+		}
+	}, {}, function() {});
 });
 
 var server = app.listen(3000, function() {
