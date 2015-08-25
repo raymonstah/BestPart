@@ -36,13 +36,6 @@ $(function() {
 				// Send this to the server.
 				tagJSON = {url: url, time : time, description : description};
 				console.log(tagJSON);
-				$.ajax({
-				  type: "POST",
-				  url: "http://localhost:3000/bestpart",
-				  contentType: 'application/json',
-				  data: JSON.stringify(tagJSON),
-
-				});
 				$.post("http://localhost:3000/bestpart", tagJSON);
 				
 			} else {
