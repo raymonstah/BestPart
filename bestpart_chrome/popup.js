@@ -1,3 +1,6 @@
+// Raymond Ho
+// 8/22/15
+
 $(function() {
 	var tabURL = '';
 	chrome.tabs.query({
@@ -25,7 +28,8 @@ $(function() {
 			if (description !== "") {
 				$('#tagDesc').val("");
 				// Binds a event click to the list item.
-				var tagLink = $("<li>").text(timeString + " : " + description).attr("id", time);
+				var tagLink = $("<li>")
+					.text(timeString + " : " + description).attr("id", time);
 				tagLink.click(function() {
 					var time = $(this).attr('id');
 					changeToTime(time);
@@ -38,7 +42,6 @@ $(function() {
 					time: time,
 					description: description
 				};
-				console.log(tagJSON);
 				$.post("http://localhost:3000/bestpart", tagJSON);
 
 			} else {
