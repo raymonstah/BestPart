@@ -2,6 +2,9 @@
 // 8/22/15
 
 $(function() {
+
+	var HOSTURL = 'http://localhost:3000/bestpart/';
+
 	var tabURL = '';
 	chrome.tabs.query({
 		active: true,
@@ -10,7 +13,12 @@ $(function() {
 		// Since there can only be one active tab in one active window, 
 		tabURL = tabs[0].url;
 		$('#url').text('Current URL: ' + tabURL);
+		console.log(tabURL);
+		$.get(HOSTURL + "gettags", {url:tabURL}, function(data) {
+			console.log(data);
+		});
 	});
+
 
 	$("#saveTime").click(function() {
 		addTagToDom(tabURL);
@@ -42,7 +50,7 @@ $(function() {
 					time: time,
 					description: description
 				};
-				$.post("http://localhost:3000/bestpart", tagJSON);
+				$.post(HOSTURL + "tag", tagJSON);
 
 			} else {
 				$('#tagDesc').attr("placeholder", "Please enter a tag..");

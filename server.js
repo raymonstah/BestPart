@@ -4,7 +4,7 @@
 var bodyParser = require('body-parser'),
 	express = require('express'),
 	Datastore = require('nedb');
-	
+
 var db = new Datastore({
 	filename: __dirname + '/db.json',
 	autoload: true
@@ -12,9 +12,26 @@ var db = new Datastore({
 
 
 var app = express();
+
 app.use(bodyParser.urlencoded({
 	extended: false
 }));
+
+
+// This is to get all tags for a certain video
+app.get('/bestpart/gettags', function(req, res) {
+	var urlObject = {url: req.query.url};
+	console.log("Received a GET tags request from:", urlObject.url);
+	db.findOne(urlObject, function(err, docs) {
+		if (docs === null) {
+			var errorString = urlObject.url + " was not found in the database..";
+			res.send(errorString);
+		}
+		else {
+			res.send(docs);
+		}
+	});
+});
 
 // This is to add or update a new tag
 app.post('/bestpart/tag', function(req, res) {
