@@ -1,5 +1,5 @@
 // Raymond Ho
-// 9/22/15
+// 8/22/15
 
 var bodyParser = require('body-parser'),
 	express = require('express'),
@@ -25,9 +25,10 @@ app.get('/bestpart/gettags', function(req, res) {
 	db.findOne(urlObject, function(err, docs) {
 		if (docs === null) {
 			var errorString = urlObject.url + " was not found in the database..";
-			res.send(errorString);
+			res.send({error: errorString});
 		}
 		else {
+			console.log('Sending over the docs..', docs);
 			res.send(docs);
 		}
 	});

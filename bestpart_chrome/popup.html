@@ -1,21 +1,23 @@
 <!doctype html>
 <html>
-<head>
-	<style>
-		li {color: grey;}
-		li:hover {color:red;}
-
-	</style>
-	<script src="jquery-2.1.4.min.js"></script>
-	<script src="popup.js"></script>
-	<title>Best Part</title>
-</head>
-<body style="width:400px;">
-	<p id="url"></p>
-	<p id="currentTime"></p>
-	<ul id="tags">
-	</ul>
-	<input type="text" id="tagDesc">
-	<button id="saveTime">Tag this spot.</button>
-</body>
+	<head>
+		<style>
+			li {color: grey;}
+			li:hover {color:red;}
+			body {width:400px;}
+			.vote-count {color: black;}
+			span {margin: 5px;}
+		</style>
+		<script src="jquery-2.1.4.min.js"></script>
+		<script src="popup.js"></script>
+		<title>Best Part</title>
+	</head>
+	<body>
+		<p id="url"></p>
+		<p id="message"></p>
+		<ul id="tags">
+		</ul>
+		<input type="text" id="tagDesc">
+		<button id="saveTime">Tag this spot.</button>
+	</body>
 </html>
