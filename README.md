@@ -5,3 +5,4 @@
 * View count
 * Delete vote
 * Track user's IP address
+* Break the video up and show thumbnails.

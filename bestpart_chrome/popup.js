@@ -29,19 +29,36 @@ var TagModule = {
 
 	// Manipulates the DOM by adding a tag as a list item.
 	addTagToDom: function(time, description, score) {
-		console.log(time, description, score);
 		// Binds a event click to the list item.
 		var tm = this;
 		var tagLink = $("<li>")
-			.text(this.convertTime(time) + " : " + description)
-			.attr("id", time)
-			.append(this.votingHTML)
-			.click(function() {
-				var time = $(this).attr('id');
-				tm.changeToTime(time);
-			});
-
+			.append($("<a>")
+				.attr("href", "#")
+				.text(this.convertTime(time) + " : " + description)
+				.click(function() {
+					var time = tagLink.attr('data-time');
+					tm.changeToTime(time);
+				}))
+			.attr("data-time", time)
+			.append(this.votingHTML);
 		$('#tags').append(tagLink);
+
+		this.invokeVotingListener();
+	},
+
+	invokeVotingListener: function() {
+
+		$('.img-upvote').click(function() {
+			var counterSelector = $(this).siblings('.vote-count');
+			var votes = Number(counterSelector.text()) + 1;
+			counterSelector.text(votes);
+		});
+
+		$('.img-downvote').click(function() {
+			var counterSelector = $(this).siblings('.vote-count');
+			var votes = Number(counterSelector.text()) -1;
+			counterSelector.text(votes);
+		});
 	},
 
 	// Changes the HTML5 video's time to the one passed in.
