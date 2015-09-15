@@ -14,20 +14,16 @@ var TagModule = {
 			code: 'var v = document.getElementsByTagName("video")[0]; v.currentTime'
 				// The last call in 'code' gets returned into 'results'
 		}, function(results) {
-			if (!results) {
-				$('#message').text("No HTML5 video found! :(");
-			}
-			else {
-				var time = results[0];
-				var description = $('#tagDesc').val();
-				if (description !== "") {
-					$('#tagDesc').val("");
-					tm.addTagToDom(time, description, 0);
-					ServerModule.sendTagToServer(url, time, description);
 
-				} else {
-					$('#tagDesc').attr("placeholder", "Please enter a tag..");
-				}
+			var time = results[0];
+			var description = $('#tagDesc').val();
+			if (description !== "") {
+				$('#tagDesc').val("");
+				tm.addTagToDom(time, description, 0);
+				ServerModule.sendTagToServer(url, time, description);
+
+			} else {
+				$('#tagDesc').attr("placeholder", "Please enter a tag..");
 			}
 		});
 	},
@@ -119,22 +115,47 @@ var ServerModule = {
 	},
 }
 
+// Controls all interactions with DOM (hopefully..)
+var DomModule = {
+
+	tabURL: '',
+
+	// This changes depending on the function invoked on init()
+	hasVideo: false, 
+
+	getTabURL: function() {
+		// Get the active Chrome tab and its URL.
+		chrome.tabs.query({
+			active: true,
+			lastFocusedWindow: true
+		}, function(tabs) {
+			// Since there can only be one active tab in one active window, 
+			this.tabURL = tabs[0].url;
+			$('#url').text('Current URL: ' + this.tabURL);
+		});
+	},
+
+	saveTagButtonListener: function() {
+		$("#saveTime").click(function() {
+			TagModule.createNewTag(this.tabURL);
+		});
+	},
+
+	init: function() {
+		// First, find out what page we're on..
+		this.getTabURL();
+
+		if (this.hasVideo) {
+			ServerModule.getTagsFromServer(this.tabURL);
+			this.saveTagButtonListener();
+		} else {
+			$('#message').text("No HTML5 video found!");
+			$('#save-a-tag').hide();
+		}
+	},
+};
+
+// The function that starts everything..
 $(function() {
-
-	var tabURL = '';
-
-	// Get the active Chrome tab and its URL.
-	chrome.tabs.query({
-		active: true,
-		lastFocusedWindow: true
-	}, function(tabs) {
-		// Since there can only be one active tab in one active window, 
-		tabURL = tabs[0].url;
-		$('#url').text('Current URL: ' + tabURL);
-		ServerModule.getTagsFromServer(tabURL);
-	});
-
-	$("#saveTime").click(function() {
-		TagModule.createNewTag(tabURL);
-	});
+	DomModule.init();
 });
