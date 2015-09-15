@@ -14,15 +14,20 @@ var TagModule = {
 			code: 'var v = document.getElementsByTagName("video")[0]; v.currentTime'
 				// The last call in 'code' gets returned into 'results'
 		}, function(results) {
-			var time = results[0];
-			var description = $('#tagDesc').val();
-			if (description !== "") {
-				$('#tagDesc').val("");
-				tm.addTagToDom(time, description, 0);
-				ServerModule.sendTagToServer(url, time, description);
+			if (!results) {
+				$('#message').text("No HTML5 video found! :(");
+			}
+			else {
+				var time = results[0];
+				var description = $('#tagDesc').val();
+				if (description !== "") {
+					$('#tagDesc').val("");
+					tm.addTagToDom(time, description, 0);
+					ServerModule.sendTagToServer(url, time, description);
 
-			} else {
-				$('#tagDesc').attr("placeholder", "Please enter a tag..");
+				} else {
+					$('#tagDesc').attr("placeholder", "Please enter a tag..");
+				}
 			}
 		});
 	},
@@ -46,18 +51,20 @@ var TagModule = {
 		this.invokeVotingListener();
 	},
 
+	// Handles the events for when a user votes on a tag.
 	invokeVotingListener: function() {
+		var handleVoting = function(selector, i) {
+			var counterSelector = selector.siblings('.vote-count');
+			var votes = Number(counterSelector.text()) + i;
+			counterSelector.text(votes);
+		};
 
 		$('.img-upvote').click(function() {
-			var counterSelector = $(this).siblings('.vote-count');
-			var votes = Number(counterSelector.text()) + 1;
-			counterSelector.text(votes);
+			handleVoting($(this), 1);
 		});
 
 		$('.img-downvote').click(function() {
-			var counterSelector = $(this).siblings('.vote-count');
-			var votes = Number(counterSelector.text()) -1;
-			counterSelector.text(votes);
+			handleVoting($(this), -1);
 		});
 	},
 
@@ -68,7 +75,7 @@ var TagModule = {
 		}, function(results) {});
 	},
 
-	// Converts seconds to Hours, Minutes, Seconds
+	// Converts seconds to Hours, Minutes, Seconds (Credit: Stackoverflow)
 	convertTime: function(d) {
 		d = Number(d);
 		var h = Math.floor(d / 3600);
