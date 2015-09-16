@@ -120,9 +120,6 @@ var DomModule = {
 
 	tabURL: '',
 
-	// This changes depending on the function invoked on init()
-	hasVideo: false, 
-
 	getTabURL: function() {
 		// Get the active Chrome tab and its URL.
 		chrome.tabs.query({
@@ -135,6 +132,25 @@ var DomModule = {
 		});
 	},
 
+	// Checks if the current tab has a HTML5 video on it.
+	checkHasVideo: function() {
+		var self = this;
+		chrome.tabs.executeScript(null, {
+			code: 'var v = document.getElementsByTagName("video"); v'
+		}, function(results) {
+			// There was a video found!
+			if(results && results.length > 0) {
+				ServerModule.getTagsFromServer(self.tabURL);
+				self.saveTagButtonListener();
+			}
+			else {
+				$('#message').text("No HTML5 video found!");
+				$('#save-a-tag').hide();
+			}
+		});
+	},
+
+	// Listens for when the save tag button is clicked.
 	saveTagButtonListener: function() {
 		$("#saveTime").click(function() {
 			TagModule.createNewTag(this.tabURL);
@@ -144,14 +160,8 @@ var DomModule = {
 	init: function() {
 		// First, find out what page we're on..
 		this.getTabURL();
-
-		if (this.hasVideo) {
-			ServerModule.getTagsFromServer(this.tabURL);
-			this.saveTagButtonListener();
-		} else {
-			$('#message').text("No HTML5 video found!");
-			$('#save-a-tag').hide();
-		}
+		// Then, check if there's a video on the page.
+		this.checkHasVideo();
 	},
 };
 
