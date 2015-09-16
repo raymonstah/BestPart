@@ -5,7 +5,7 @@
 // The main module in charge of creating and adding tags.
 var TagModule = {
 
-	votingHTML: '<span><a href="#" class="img-upvote"><img src="thumbs-up.png" alt=""></a><span class="vote-count">9999</span><a href="#" class="img-downvote"><img src="thumbs-down.png"></a></span>',
+	votingHTML: '<span><a href="#" class="img-upvote"><img src="thumbs-up.png" alt=""></a><span class="vote-count">0</span><a href="#" class="img-downvote"><img src="thumbs-down.png"></a></span>',
 
 	createNewTag: function(url) {
 		var tm = this;
