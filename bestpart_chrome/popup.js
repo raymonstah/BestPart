@@ -7,24 +7,16 @@ var TagModule = {
 
 	votingHTML: '<span><a href="#" class="img-upvote"><img src="thumbs-up.png" alt=""></a><span class="vote-count">0</span><a href="#" class="img-downvote"><img src="thumbs-down.png"></a></span>',
 
-	createNewTag: function(url) {
+	createNewTag: function(url, description) {
 		var tm = this;
 
 		chrome.tabs.executeScript(null, {
 			code: 'var v = document.getElementsByTagName("video")[0]; v.currentTime'
 				// The last call in 'code' gets returned into 'results'
 		}, function(results) {
-
 			var time = results[0];
-			var description = $('#tagDesc').val();
-			if (description !== "") {
-				$('#tagDesc').val("");
-				tm.addTagToDom(time, description, 0);
-				ServerModule.sendTagToServer(url, time, description);
-
-			} else {
-				$('#tagDesc').attr("placeholder", "Please enter a tag..");
-			}
+			tm.addTagToDom(time, description, 0);
+			ServerModule.sendTagToServer(url, time, description);
 		});
 	},
 
@@ -139,11 +131,10 @@ var DomModule = {
 			code: 'var v = document.getElementsByTagName("video"); v'
 		}, function(results) {
 			// There was a video found!
-			if(results && results.length > 0) {
+			if (results && results.length > 0) {
 				ServerModule.getTagsFromServer(self.tabURL);
 				self.saveTagButtonListener();
-			}
-			else {
+			} else {
 				$('#message').text("No HTML5 video found!");
 				$('#save-a-tag').hide();
 			}
@@ -153,7 +144,14 @@ var DomModule = {
 	// Listens for when the save tag button is clicked.
 	saveTagButtonListener: function() {
 		$("#saveTime").click(function() {
-			TagModule.createNewTag(this.tabURL);
+
+			var description = $('#tagDesc').val();
+			if (description !== "") {
+				$('#tagDesc').val("");
+				TagModule.createNewTag(this.tabURL, description);
+			} else {
+				$('#tagDesc').attr("placeholder", "Please enter a tag..");
+			}
 		});
 	},
 
