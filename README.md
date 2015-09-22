@@ -1,4 +1,5 @@
 ##A Chrome extension that brings you right into the action of a video
+### (IN PROGRESS!)
 
 ####Plan on adding:
 * Voting system - Done
