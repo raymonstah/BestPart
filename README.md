@@ -6,4 +6,7 @@
 * Track user's IP address to prevent multiple upvotes
 * Break the video up and show thumbnails (separate).
 
+####Useful for:
+* Viewing a specific moment in a video
+* Jumping to a song in a full album video (See below)
 ![Screenshot here](screenshot.png)
