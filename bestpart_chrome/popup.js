@@ -81,6 +81,7 @@ var ServerModule = {
 		$.get(this.HOSTURL + "gettags", {
 			url: videoURL
 		}, function(data) {
+			console.log(data);
 			if (data.error) {
 				$('#message').text("No tags found! Create some!");
 			} else {
@@ -114,13 +115,14 @@ var DomModule = {
 
 	getTabURL: function() {
 		// Get the active Chrome tab and its URL.
+		var self = this;
 		chrome.tabs.query({
 			active: true,
 			lastFocusedWindow: true
 		}, function(tabs) {
 			// Since there can only be one active tab in one active window, 
-			this.tabURL = tabs[0].url;
-			$('#url').text('Current URL: ' + this.tabURL);
+			self.tabURL = tabs[0].url;
+			$('#url').text('Current URL: ' + self.tabURL);
 		});
 	},
 
@@ -143,12 +145,12 @@ var DomModule = {
 
 	// Listens for when the save tag button is clicked.
 	saveTagButtonListener: function() {
+		var self = this;
 		$("#saveTime").click(function() {
-
 			var description = $('#tagDesc').val();
 			if (description !== "") {
 				$('#tagDesc').val("");
-				TagModule.createNewTag(this.tabURL, description);
+				TagModule.createNewTag(self.tabURL, description);
 			} else {
 				$('#tagDesc').attr("placeholder", "Please enter a tag..");
 			}

@@ -46,7 +46,7 @@ app.post('/bestpart/tag', function(req, res) {
 	var searchFor = {
 		url: tagJSON.url
 	};
-	console.log("Received a POST");
+	console.log("Received a POST", tagJSON);
 	db.findOne(searchFor, function(err, docs) {
 		if (docs === null) {
 			video = {
